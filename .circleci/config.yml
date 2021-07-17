@@ -44,6 +44,7 @@ jobs:
           name: Build front-end
           command: |
             # Your code here
+            npm i
             exit 1
       - save_cache:
           paths: [frontend/node_modules]
