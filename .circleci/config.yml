@@ -152,7 +152,8 @@ jobs:
           command: |
             # Your code here
             cd backend
-            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical 
+            # npm audit fix --audit-level=critical --force
 
   deploy-infrastructure:
     docker:
@@ -339,15 +340,15 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [test-feature-branch]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [test-feature-branch]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
