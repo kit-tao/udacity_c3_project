@@ -229,6 +229,7 @@ jobs:
   smoke-test:
     docker:
       # Lightweight Docker image 
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       - run:
@@ -268,6 +269,7 @@ jobs:
 cleanup:
     docker:
       # Docker image here
+      - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
       - run:
