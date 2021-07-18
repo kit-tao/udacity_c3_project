@@ -53,7 +53,7 @@ jobs:
           name: Build front-end
           command: |
             # Your code here
-            npm i
+            npm install
             npm run --prefix frontend build
       - save_cache:
           paths: [frontend/node_modules]
@@ -71,7 +71,7 @@ jobs:
           name: Back-end build
           command: |
              # Your code here
-             npm i
+             npm install
              npm run --prefix backend build
             #  exit 1
       - save_cache:
