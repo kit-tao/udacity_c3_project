@@ -133,7 +133,8 @@ jobs:
           command: |
             # Your code here
             cd frontend
-            npm audit --audit-level=critical 
+            # npm audit --audit-level=critical 
+            npm audit fix --audit-level=critical --force
 
   scan-backend:
     docker:
@@ -147,11 +148,11 @@ jobs:
           keys: [backend-build]
       # Your job code here
       - run:
-          name: front-end scan
+          name: backend scan
           command: |
             # Your code here
             cd backend
-            npm audit --audit-level=critical 
+            npm audit fix --audit-level=critical --force
 
   deploy-infrastructure:
     docker:
@@ -159,6 +160,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Ensure back-end infrastructure exists
           command: |
