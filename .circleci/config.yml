@@ -162,7 +162,7 @@ jobs:
     steps:
       - run:
           name: install tar util
-          command: apk update && apk add tar
+          command: yum update && yum install tar
       # Checkout code from git
       - checkout
 
