@@ -162,7 +162,7 @@ jobs:
     steps:
       - run:
           name: install tar util
-          command: yum update && yum install tar
+          command: yum update && yum install tar -y
       # Checkout code from git
       - checkout
 
