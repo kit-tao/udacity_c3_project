@@ -175,14 +175,18 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              #--tags project=your-tag \
-              # --stack-name "your front-end stack name with workflow id" \
-              # --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-              exit 1
+              --tags project=udapeople \
+              --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="kl2021ejoe9385522"  
+              
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
+            aws ec2 desribe-instances \
+              --query "Reservations[*].Instances[*].PublicIpAddress" \
+              --filters "Name=tag:project,Values=udapeople" \
+              --output text >> ~/project/.circleci/ansible/inventory.txt
             exit 1
       - persist_to_workspace:
           root: ~/
