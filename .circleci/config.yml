@@ -162,7 +162,7 @@ jobs:
     steps:
       - run:
           name: install tar util
-          command: yum update && yum install tar -y
+          command: yum update && yum install tar gzip -y
       # Checkout code from git
       - checkout
 
@@ -204,17 +204,19 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: ansible/ansible-runner
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
       - checkout
       # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: ["62:f7:c7:41:93:86:c5:41:3a:61:51:5e:a6:99:cc:90"]
       # attach workspace
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
-          command: |
-            # Your code here
-            exit 1
+          command: apk add --update ansible 
       - run:
           name: Configure server
           command: |
