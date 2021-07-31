@@ -1,5 +1,6 @@
 version: 2.1
 
+# reusable block
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -12,10 +13,10 @@ commands:
     steps:
       - run:
           name: Destroy environments
-          when: on_fail
+          # when: on_fail  -- why is this need?
           command: |
-            # Your code here
-            exit 0
+            aws cloudformation delete-stack --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+          
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -196,10 +197,14 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
-      - run: 
-          name: Clean up failed job
-          command: aws cloudformation delete-stack --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
-          when: on_fail    
+      # - run: 
+      #     name: Clean up failed job
+      #     # command: aws cloudformation delete-stack --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+      #     when: on_fail    
+      - destroy-environment:
+          name: destroy when fail
+          WorkflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+        when: on_fail
 
   configure-infrastructure:
     docker:
@@ -220,9 +225,12 @@ jobs:
       - run:
           name: Configure server
           command: |
-            # Your code here
-            exit 1
+            ansible-playbook ansible/config-server.yml -i ansible/inventory.txt
       # Here's where you will add some code to rollback on failure      
+      - run: 
+          name: Clean up failed job
+          command: aws cloudformation delete-stack --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+          when: on_fail    
 
   run-migrations:
     docker:
@@ -230,6 +238,7 @@ jobs:
       # Docker image here that supports NodeJS
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Run migrations
           command: |
